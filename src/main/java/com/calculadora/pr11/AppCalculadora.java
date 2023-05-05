@@ -1,6 +1,7 @@
 package com.calculadora.pr11;
 
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AppCalculadora extends Application {
     @Override
@@ -102,6 +104,7 @@ public class AppCalculadora extends Application {
         Label etiOperando1 = new Label();
         Label etiOperador = new Label();
         Label etiOperando2 = new Label();
+
         //HBox
         HBox cajaOperaciones = new HBox(etiOperando1,etiOperador,etiOperando2);
         cajaOperaciones.setPadding(new Insets(10));
@@ -129,43 +132,154 @@ public class AppCalculadora extends Application {
 
         //EVENTOS
         //Variable para controlar el estado
-        int control = 0;
+        AtomicInteger control = new AtomicInteger();
 
         //Controlador del teclado numérico
         EventHandler<MouseEvent> handlerTecladoNum = e -> {
-            Button b = (Button) e.getSource();
+            //Operando 1
+            if (control.get() == 0 || control.get() == 1){
+                control.set(1);
+                Button b = (Button) e.getSource();
+                if (b.getText().equals("1")){
+                    etiOperando1.setText(etiOperando1.getText().concat("1"));
+                }
+                if (b.getText().equals("2")){
+                    etiOperando1.setText(etiOperando1.getText().concat("2"));
+                }
+                if (b.getText().equals("3")){
+                    etiOperando1.setText(etiOperando1.getText().concat("3"));
+                }
+                if (b.getText().equals("4")){
+                    etiOperando1.setText(etiOperando1.getText().concat("4"));
+                }
+                if (b.getText().equals("5")){
+                    etiOperando1.setText(etiOperando1.getText().concat("5"));
+                }
+                if (b.getText().equals("6")){
+                    etiOperando1.setText(etiOperando1.getText().concat("6"));
+                }
+                if (b.getText().equals("7")){
+                    etiOperando1.setText(etiOperando1.getText().concat("7"));
+                }
+                if (b.getText().equals("8")){
+                    etiOperando1.setText(etiOperando1.getText().concat("8"));
+                }
+                if (b.getText().equals("9")){
+                    etiOperando1.setText(etiOperando1.getText().concat("9"));
+                }
+                if (b.getText().equals("0")){
+                    etiOperando1.setText(etiOperando1.getText().concat("0"));
+                }
 
-            if (b.getText().equals("1")){
-
-            }
-            if (b.getText().equals("2")){
-
-            }
-            if (b.getText().equals("3")){
-
-            }
-            if (b.getText().equals("4")){
-
-            }
-            if (b.getText().equals("5")){
-
-            }
-            if (b.getText().equals("6")){
-
-            }
-            if (b.getText().equals("7")){
-
-            }
-            if (b.getText().equals("8")){
-
-            }
-            if (b.getText().equals("9")){
-
-            }
-            if (b.getText().equals("0")){
-
+                //Operando 2
+            }else if (control.get() == 2 || control.get() == 3){
+                control.set(3);
+                Button b = (Button) e.getSource();
+                if (b.getText().equals("1")){
+                    etiOperando2.setText(etiOperando2.getText().concat("1"));
+                }
+                if (b.getText().equals("2")){
+                    etiOperando2.setText(etiOperando2.getText().concat("2"));
+                }
+                if (b.getText().equals("3")){
+                    etiOperando2.setText(etiOperando2.getText().concat("3"));
+                }
+                if (b.getText().equals("4")){
+                    etiOperando2.setText(etiOperando2.getText().concat("4"));
+                }
+                if (b.getText().equals("5")){
+                    etiOperando2.setText(etiOperando2.getText().concat("5"));
+                }
+                if (b.getText().equals("6")){
+                    etiOperando2.setText(etiOperando2.getText().concat("6"));
+                }
+                if (b.getText().equals("7")){
+                    etiOperando2.setText(etiOperando2.getText().concat("7"));
+                }
+                if (b.getText().equals("8")){
+                    etiOperando2.setText(etiOperando2.getText().concat("8"));
+                }
+                if (b.getText().equals("9")){
+                    etiOperando2.setText(etiOperando2.getText().concat("9"));
+                }
+                if (b.getText().equals("0")){
+                    etiOperando2.setText(etiOperando2.getText().concat("0"));
+                }
             }
         };
+
+        //Controlador del botón reset
+        EventHandler<MouseEvent> handlerReset = e ->{
+          control.set(0);
+          etiOperando1.setText("");
+          etiOperando2.setText("");
+          etiOperador.setText("");
+        };
+
+        //Controlador de los operadores
+        EventHandler<MouseEvent> handlerOperadores = e ->{
+          if (control.get() == 1 || control.get() == 2){
+              control.set(2);
+              RadioButton r = (RadioButton) e.getSource();
+              if (r.getText().equals("Suma")){
+                  etiOperador.setText("+");
+              }else if (r.getText().equals("Resta")){
+                  etiOperador.setText("-");
+              }else if (r.getText().equals("Producto")){
+                  etiOperador.setText("*");
+              }else if (r.getText().equals("División")){
+                  etiOperador.setText("/");
+              }
+          }
+        };
+
+        //Controlador del botón resultado
+        EventHandler<MouseEvent> handlerResultado = e ->{
+            if (control.get() == 3){
+                control.set(1);
+                int op1Int = Integer.parseInt(etiOperando1.getText());
+                int op2Int = Integer.parseInt(etiOperando2.getText());
+                int resultadoInt = 0;
+                if (etiOperador.getText().equals("+")){
+                    resultadoInt = op1Int+op2Int;
+                }else if (etiOperador.getText().equals("-")){
+                    resultadoInt = op1Int-op2Int;
+                }else if (etiOperador.getText().equals("*")){
+                    resultadoInt = op1Int*op2Int;
+                }else if (etiOperador.getText().equals("/")){
+                    resultadoInt = op1Int/op2Int;
+                }
+                etiOperando1.setText(String.valueOf(resultadoInt));
+                etiOperando2.setText("");
+                etiOperador.setText("");
+            }
+        };
+
+        //ASIGNACIÓN DE HANDLERS
+        //Teclado num
+        num1.setOnMouseClicked(handlerTecladoNum);
+        num2.setOnMouseClicked(handlerTecladoNum);
+        num3.setOnMouseClicked(handlerTecladoNum);
+        num4.setOnMouseClicked(handlerTecladoNum);
+        num5.setOnMouseClicked(handlerTecladoNum);
+        num6.setOnMouseClicked(handlerTecladoNum);
+        num7.setOnMouseClicked(handlerTecladoNum);
+        num8.setOnMouseClicked(handlerTecladoNum);
+        num9.setOnMouseClicked(handlerTecladoNum);
+        num0.setOnMouseClicked(handlerTecladoNum);
+
+        //Reset
+        numReset.setOnMouseClicked(handlerReset);
+
+        //Operadores
+        suma.setOnMouseClicked(handlerOperadores);
+        resta.setOnMouseClicked(handlerOperadores);
+        producto.setOnMouseClicked(handlerOperadores);
+        division.setOnMouseClicked(handlerOperadores);
+
+        //Resultado
+        resultado.setOnMouseClicked(handlerResultado);
+
         //FIN EVENTOS
 
         //ASIGNAR Y MOSTRAR STAGE
